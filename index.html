@@ -7,46 +7,130 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Geometric Background -->
+    <svg class="geometric-bg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
+    
     <div class="container">
-        <div class="cake-container">
-            <!-- Cake layers -->
-            <div class="cake-layer layer-3"></div>
-            <div class="cake-layer layer-2"></div>
-            <div class="cake-layer layer-1"></div>
+        <!-- SVG Cake -->
+        <svg class="cake-svg" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="cakeGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ffb6d9;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ff8dc7;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="cakeGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#fff0b3;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ffe680;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="cakeGrad3" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#c7ecff;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#9dd9ff;stop-opacity:1" />
+                </linearGradient>
+                <filter id="shadow">
+                    <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"/>
+                </filter>
+            </defs>
+            
+            <!-- Cake Layer 1 (Bottom) -->
+            <g class="layer layer-1-group">
+                <rect x="100" y="340" width="200" height="80" rx="10" fill="url(#cakeGrad1)" filter="url(#shadow)"/>
+                <line x1="120" y1="350" x2="120" y2="410" stroke="#ff6b9d" stroke-width="2" opacity="0.5"/>
+                <line x1="140" y1="350" x2="140" y2="410" stroke="#ff6b9d" stroke-width="2" opacity="0.5"/>
+                <line x1="160" y1="350" x2="160" y2="410" stroke="#ff6b9d" stroke-width="2" opacity="0.5"/>
+                <line x1="180" y1="350" x2="180" y2="410" stroke="#ff6b9d" stroke-width="2" opacity="0.5"/>
+                <line x1="200" y1="350" x2="200" y2="410" stroke="#ff6b9d" stroke-width="2" opacity="0.5"/>
+                <line x1="220" y1="350" x2="220" y2="410" stroke="#ff6b9d" stroke-width="2" opacity="0.5"/>
+                <line x1="240" y1="350" x2="240" y2="410" stroke="#ff6b9d" stroke-width="2" opacity="0.5"/>
+                <line x1="260" y1="350" x2="260" y2="410" stroke="#ff6b9d" stroke-width="2" opacity="0.5"/>
+                <line x1="280" y1="350" x2="280" y2="410" stroke="#ff6b9d" stroke-width="2" opacity="0.5"/>
+                <circle cx="130" cy="370" r="4" fill="#ff1744"/>
+                <circle cx="170" cy="385" r="4" fill="#ff1744"/>
+                <circle cx="230" cy="370" r="4" fill="#ff1744"/>
+                <circle cx="270" cy="390" r="4" fill="#ff1744"/>
+            </g>
+            
+            <!-- Cake Layer 2 (Middle) -->
+            <g class="layer layer-2-group">
+                <rect x="120" y="270" width="160" height="70" rx="10" fill="url(#cakeGrad2)" filter="url(#shadow)"/>
+                <polygon points="140,285 145,275 150,285" fill="#ffd54f" opacity="0.7"/>
+                <polygon points="170,295 175,285 180,295" fill="#ffd54f" opacity="0.7"/>
+                <polygon points="200,285 205,275 210,285" fill="#ffd54f" opacity="0.7"/>
+                <polygon points="230,295 235,285 240,295" fill="#ffd54f" opacity="0.7"/>
+                <polygon points="260,285 265,275 270,285" fill="#ffd54f" opacity="0.7"/>
+            </g>
+            
+            <!-- Cake Layer 3 (Top) -->
+            <g class="layer layer-3-group">
+                <rect x="140" y="210" width="120" height="60" rx="10" fill="url(#cakeGrad3)" filter="url(#shadow)"/>
+                <path d="M160,230 Q170,220 180,230" stroke="#81d4fa" stroke-width="2" fill="none" opacity="0.6"/>
+                <path d="M180,245 Q190,235 200,245" stroke="#81d4fa" stroke-width="2" fill="none" opacity="0.6"/>
+                <path d="M200,230 Q210,220 220,230" stroke="#81d4fa" stroke-width="2" fill="none" opacity="0.6"/>
+                <circle cx="165" cy="240" r="3" fill="#29b6f6"/>
+                <circle cx="195" cy="225" r="3" fill="#29b6f6"/>
+                <circle cx="225" cy="240" r="3" fill="#29b6f6"/>
+            </g>
             
             <!-- Candles -->
-            <div class="candles">
-                <div class="candle">
-                    <div class="flame"></div>
-                    <div class="wick"></div>
-                </div>
-                <div class="candle">
-                    <div class="flame"></div>
-                    <div class="wick"></div>
-                </div>
-                <div class="candle">
-                    <div class="flame"></div>
-                    <div class="wick"></div>
-                </div>
-            </div>
+            <g class="candles-group">
+                <g class="candle-1">
+                    <rect x="165" y="160" width="15" height="50" rx="3" fill="#ff6b6b"/>
+                    <rect x="165" y="160" width="15" height="50" rx="3" fill="url(#candleStripe)" opacity="0.3"/>
+                    <line x1="172.5" y1="160" x2="172.5" y2="150" stroke="#333" stroke-width="2"/>
+                    <ellipse cx="172.5" cy="145" rx="12" ry="15" class="flame flame-1">
+                        <animate attributeName="ry" values="15;18;15" dur="0.3s" repeatCount="indefinite"/>
+                    </ellipse>
+                </g>
+                <g class="candle-2">
+                    <rect x="192.5" y="160" width="15" height="50" rx="3" fill="#4ecdc4"/>
+                    <line x1="200" y1="160" x2="200" y2="150" stroke="#333" stroke-width="2"/>
+                    <ellipse cx="200" cy="145" rx="12" ry="15" class="flame flame-2">
+                        <animate attributeName="ry" values="15;17;15" dur="0.35s" repeatCount="indefinite"/>
+                    </ellipse>
+                </g>
+                <g class="candle-3">
+                    <rect x="220" y="160" width="15" height="50" rx="3" fill="#f7b731"/>
+                    <line x1="227.5" y1="160" x2="227.5" y2="150" stroke="#333" stroke-width="2"/>
+                    <ellipse cx="227.5" cy="145" rx="12" ry="15" class="flame flame-3">
+                        <animate attributeName="ry" values="15;19;15" dur="0.4s" repeatCount="indefinite"/>
+                    </ellipse>
+                </g>
+            </g>
             
-            <!-- Decorations -->
-            <div class="decorations">
-                <div class="cherry cherry-1">🍒</div>
-                <div class="cherry cherry-2">🍒</div>
-            </div>
-        </div>
+            <!-- Decorative Stars -->
+            <g class="stars-group">
+                <path d="M80,200 l5,15 l16,0 l-13,10 l5,15 l-13,-10 l-13,10 l5,-15 l-13,-10 l16,0 z" fill="#ffd700" opacity="0" class="star star-1"/>
+                <path d="M320,250 l4,12 l13,0 l-10,8 l4,12 l-10,-8 l-10,8 l4,-12 l-10,-8 l13,0 z" fill="#ffd700" opacity="0" class="star star-2"/>
+                <path d="M100,350 l4,12 l13,0 l-10,8 l4,12 l-10,-8 l-10,8 l4,-12 l-10,-8 l13,0 z" fill="#ffd700" opacity="0" class="star star-3"/>
+            </g>
+        </svg>
         
-        <h1 class="birthday-text">Happy Birthday! 🎉</h1>
+        <h1 class="birthday-text">
+            <span class="letter">H</span>
+            <span class="letter">a</span>
+            <span class="letter">p</span>
+            <span class="letter">p</span>
+            <span class="letter">y</span>
+            <span class="letter"> </span>
+            <span class="letter">B</span>
+            <span class="letter">i</span>
+            <span class="letter">r</span>
+            <span class="letter">t</span>
+            <span class="letter">h</span>
+            <span class="letter">d</span>
+            <span class="letter">a</span>
+            <span class="letter">y</span>
+            <span class="letter">!</span>
+        </h1>
         
-        <!-- Balloons -->
-        <div class="balloons">
-            <div class="balloon balloon-1">🎈</div>
-            <div class="balloon balloon-2">🎈</div>
-            <div class="balloon balloon-3">🎈</div>
-            <div class="balloon balloon-4">🎈</div>
-            <div class="balloon balloon-5">🎈</div>
-        </div>
+        <!-- Geometric Particles -->
+        <div class="particles-container"></div>
         
         <!-- Confetti -->
         <div class="confetti-container"></div>
