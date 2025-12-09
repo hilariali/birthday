@@ -16,15 +16,13 @@ $(document).ready(function() {
             $(this).remove();
         });
         
-        // Wait for cake animation to finish, then play birthday song
-        setTimeout(() => {
-            playBirthdaySong();
-        }, 6000); // Start after cake stacking animation completes
+        // Play birthday song immediately after click
+        playBirthdaySong();
         
-        // Show blow instruction and enable microphone after song starts
+        // Show blow instruction and enable microphone after song
         setTimeout(() => {
             initMicrophone();
-        }, 8000); // Give time for song to play a bit
+        }, 2000); // Give time for song to play a bit
     });
 });
 
