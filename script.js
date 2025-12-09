@@ -48,12 +48,27 @@ function playBirthdaySong() {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         console.log('Audio context state:', audioCtx.state);
+        console.log('Audio context sample rate:', audioCtx.sampleRate);
+        console.log('Audio context destination:', audioCtx.destination);
+        
+        // First play a test beep to verify audio is working
+        const testOsc = audioCtx.createOscillator();
+        const testGain = audioCtx.createGain();
+        testOsc.connect(testGain);
+        testGain.connect(audioCtx.destination);
+        testOsc.frequency.value = 440;
+        testGain.gain.value = 0.3;
+        const now = audioCtx.currentTime;
+        testOsc.start(now);
+        testOsc.stop(now + 0.2);
+        console.log('🔊 Test beep scheduled at', now);
         
         // Resume audio context if suspended (browser autoplay policy)
         if (audioCtx.state === 'suspended') {
             console.log('Resuming suspended audio context...');
             audioCtx.resume().then(() => {
                 console.log('✅ Audio context resumed successfully');
+                console.log('New state:', audioCtx.state);
             }).catch(err => {
                 console.error('Failed to resume audio context:', err);
             });
