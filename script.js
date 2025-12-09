@@ -7,8 +7,20 @@ let isBlownOut = false;
 $(document).ready(function() {
     console.log('Happy Birthday Ms Charlotte! 🎂');
     
-    // Auto-play immediately on page load
-    playBirthdaySong();
+    let hasStarted = false;
+    
+    // Show a simple instruction overlay
+    const overlay = $('<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 1.5em; font-family: Lato, sans-serif; text-align: center; z-index: 9999; text-shadow: 0 0 10px rgba(0,0,0,0.5);">👆 Click anywhere to start 🎵</div>');
+    $('body').append(overlay);
+    
+    // Play song on first click/touch anywhere
+    $(document).one('click touchstart', function() {
+        if (!hasStarted) {
+            hasStarted = true;
+            overlay.fadeOut(500, function() { $(this).remove(); });
+            playBirthdaySong();
+        }
+    });
     
     // Show blow instruction and enable microphone after cake finishes stacking
     setTimeout(() => {
