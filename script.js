@@ -7,22 +7,32 @@ let isBlownOut = false;
 $(document).ready(function() {
     console.log('Happy Birthday Ms Charlotte! 🎂');
     
-    // Need user interaction for audio - play on first click anywhere
-    let hasPlayed = false;
-    $(document).one('click touchstart', function() {
-        if (!hasPlayed) {
-            hasPlayed = true;
+    // Add a visible "Click to Start" button
+    const startButton = $('<button class="start-button" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 30px; background: linear-gradient(135deg, #ff69b4, #da70d6); color: white; border: none; border-radius: 25px; font-size: 1.2em; font-family: Lato, sans-serif; cursor: pointer; z-index: 10000; box-shadow: 0 4px 15px rgba(255,105,180,0.4);">🎵 Click to Start Birthday Song 🎂</button>');
+    $('body').append(startButton);
+    
+    let hasStarted = false;
+    
+    startButton.on('click', function() {
+        if (!hasStarted) {
+            hasStarted = true;
+            $(this).fadeOut(500, function() {
+                $(this).remove();
+            });
             playBirthdaySong();
         }
     });
     
-    // Auto-trigger after a moment (may not work due to browser autoplay policy)
-    setTimeout(() => {
-        if (!hasPlayed) {
+    // Also try to play on any click/touch if button not used
+    $(document).one('click touchstart', function(e) {
+        if (!hasStarted && !$(e.target).hasClass('start-button')) {
+            hasStarted = true;
+            startButton.fadeOut(500, function() {
+                startButton.remove();
+            });
             playBirthdaySong();
-            hasPlayed = true;
         }
-    }, 100);
+    });
     
     // Show blow instruction and enable microphone after cake finishes stacking
     setTimeout(() => {

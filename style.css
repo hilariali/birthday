@@ -20,7 +20,7 @@ body {
   background: #ffffff;
   border-radius: 10px;
   position: absolute;
-  top: 228px;
+  top: 180px;
   left: 50%;
   margin-left: -2.4px;
   margin-top: -8.33333333px;
@@ -137,7 +137,7 @@ body {
   color: #d1d1d1;
   font-family: "Lato", sans-serif;
   text-align: center;
-  margin-top: 40px;
+  margin-top: 80px;
   font-size: 0.9em;
   opacity: 0;
   -webkit-animation: fadeInInstruction 1s 7s ease-out forwards;
