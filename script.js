@@ -7,35 +7,61 @@ let isBlownOut = false;
 $(document).ready(function() {
     console.log('Happy Birthday Ms Charlotte! 🎂');
     
-    // Wait for cake animation to finish, then play birthday song
-    setTimeout(() => {
-        playBirthdaySong();
-    }, 6000); // Start after cake stacking animation completes
+    // Add a click-to-start overlay due to browser autoplay restrictions
+    const startOverlay = $('<div class="start-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; cursor: pointer;"><h2 style="color: white; font-size: 2em; text-align: center;">🎂 Click to Start Birthday Celebration! 🎂</h2></div>');
+    $('body').append(startOverlay);
     
-    // Show blow instruction and enable microphone after song starts
-    setTimeout(() => {
-        initMicrophone();
-    }, 8000); // Give time for song to play a bit
+    startOverlay.on('click', function() {
+        $(this).fadeOut(500, function() {
+            $(this).remove();
+        });
+        
+        // Wait for cake animation to finish, then play birthday song
+        setTimeout(() => {
+            playBirthdaySong();
+        }, 6000); // Start after cake stacking animation completes
+        
+        // Show blow instruction and enable microphone after song starts
+        setTimeout(() => {
+            initMicrophone();
+        }, 8000); // Give time for song to play a bit
+    });
 });
 
 function playBirthdaySong() {
     // Create a simple celebratory melody using Web Audio API
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
-    // Happy Birthday melody (simplified)
+    // Happy Birthday melody (complete version, louder)
     const notes = [
-        {freq: 261.63, duration: 0.5}, // C
-        {freq: 261.63, duration: 0.5}, // C
-        {freq: 293.66, duration: 1},   // D
-        {freq: 261.63, duration: 1},   // C
-        {freq: 349.23, duration: 1},   // F
-        {freq: 329.63, duration: 2},   // E
-        {freq: 261.63, duration: 0.5}, // C
-        {freq: 261.63, duration: 0.5}, // C
-        {freq: 293.66, duration: 1},   // D
-        {freq: 261.63, duration: 1},   // C
-        {freq: 392.00, duration: 1},   // G
-        {freq: 349.23, duration: 2}    // F
+        {freq: 261.63, duration: 0.4}, // C - Happy
+        {freq: 261.63, duration: 0.4}, // C - birth-
+        {freq: 293.66, duration: 0.8}, // D - day
+        {freq: 261.63, duration: 0.8}, // C - to
+        {freq: 349.23, duration: 0.8}, // F - you
+        {freq: 329.63, duration: 1.6}, // E
+        
+        {freq: 261.63, duration: 0.4}, // C - Happy
+        {freq: 261.63, duration: 0.4}, // C - birth-
+        {freq: 293.66, duration: 0.8}, // D - day
+        {freq: 261.63, duration: 0.8}, // C - to
+        {freq: 392.00, duration: 0.8}, // G - you
+        {freq: 349.23, duration: 1.6}, // F
+        
+        {freq: 261.63, duration: 0.4}, // C - Happy
+        {freq: 261.63, duration: 0.4}, // C - birth-
+        {freq: 523.25, duration: 0.8}, // C5 - day
+        {freq: 440.00, duration: 0.8}, // A - dear
+        {freq: 349.23, duration: 0.8}, // F - [name]
+        {freq: 329.63, duration: 0.8}, // E
+        {freq: 293.66, duration: 1.6}, // D
+        
+        {freq: 466.16, duration: 0.4}, // Bb - Happy
+        {freq: 466.16, duration: 0.4}, // Bb - birth-
+        {freq: 440.00, duration: 0.8}, // A - day
+        {freq: 349.23, duration: 0.8}, // F - to
+        {freq: 392.00, duration: 0.8}, // G - you
+        {freq: 349.23, duration: 1.6}  // F
     ];
     
     let currentTime = audioCtx.currentTime;
@@ -50,7 +76,8 @@ function playBirthdaySong() {
         oscillator.frequency.value = note.freq;
         oscillator.type = 'sine';
         
-        gainNode.gain.setValueAtTime(0.3, currentTime);
+        // Increased volume to 0.5
+        gainNode.gain.setValueAtTime(0.5, currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + note.duration);
         
         oscillator.start(currentTime);
@@ -58,6 +85,8 @@ function playBirthdaySong() {
         
         currentTime += note.duration;
     });
+    
+    console.log('🎵 Playing birthday song...');
 }
 
 async function initMicrophone() {
