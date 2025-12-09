@@ -7,8 +7,22 @@ let isBlownOut = false;
 $(document).ready(function() {
     console.log('Happy Birthday Ms Charlotte! 🎂');
     
-    // Start birthday song immediately as page loads (during cake stacking)
-    playBirthdaySong();
+    // Need user interaction for audio - play on first click anywhere
+    let hasPlayed = false;
+    $(document).one('click touchstart', function() {
+        if (!hasPlayed) {
+            hasPlayed = true;
+            playBirthdaySong();
+        }
+    });
+    
+    // Auto-trigger after a moment (may not work due to browser autoplay policy)
+    setTimeout(() => {
+        if (!hasPlayed) {
+            playBirthdaySong();
+            hasPlayed = true;
+        }
+    }, 100);
     
     // Show blow instruction and enable microphone after cake finishes stacking
     setTimeout(() => {
@@ -64,8 +78,8 @@ function playBirthdaySong() {
         oscillator.frequency.value = note.freq;
         oscillator.type = 'sine';
         
-        // Increased volume to 0.5
-        gainNode.gain.setValueAtTime(0.5, currentTime);
+        // Increased volume to 0.8 for better audibility
+        gainNode.gain.setValueAtTime(0.8, currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + note.duration);
         
         oscillator.start(currentTime);
@@ -121,7 +135,7 @@ function detectBlow() {
         console.log('Audio level:', average);
         
         // If volume is high enough (user is blowing), extinguish candle
-        if (average > 100) { // Lowered threshold for more sensitivity
+        if (average > 120) { // Threshold set to 120
             blowOutCandle();
         } else {
             requestAnimationFrame(checkAudioLevel);
