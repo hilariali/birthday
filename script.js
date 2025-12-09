@@ -143,8 +143,8 @@ function calibrateBackgroundNoise() {
             // Calculate average baseline noise
             baselineNoise = samples.reduce((a, b) => a + b, 0) / samples.length;
             
-            // Set adaptive threshold: baseline + 70 (if baseline is 10, threshold is 80; if baseline is 30, threshold is 100, etc.)
-            dynamicThreshold = baselineNoise + 70;
+            // Set adaptive threshold: baseline + 80 (if baseline is 20, threshold is 100; if baseline is 30, threshold is 110, etc.)
+            dynamicThreshold = baselineNoise + 80;
             
             console.log(`📊 Background noise: ${baselineNoise.toFixed(2)}, Threshold set to: ${dynamicThreshold.toFixed(2)}`);
             
