@@ -5,8 +5,6 @@ let microphone;
 let isBlownOut = false;
 
 $(document).ready(function() {
-    console.log('Happy Birthday Ms Charlotte! 🎂');
-    
     // Auto-play immediately on page load
     playBirthdaySong();
     
@@ -18,41 +16,16 @@ $(document).ready(function() {
 
 function playBirthdaySong() {
     try {
-        console.log('🎵 Starting birthday song...');
-        
         // Create a simple celebratory melody using Web Audio API
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        console.log('Audio context state:', audioCtx.state);
-        console.log('Audio context sample rate:', audioCtx.sampleRate);
-        console.log('Audio context destination:', audioCtx.destination);
-        
-        // First play a test beep to verify audio is working
-        const testOsc = audioCtx.createOscillator();
-        const testGain = audioCtx.createGain();
-        testOsc.connect(testGain);
-        testGain.connect(audioCtx.destination);
-        testOsc.frequency.value = 440;
-        testGain.gain.value = 0.3;
-        const now = audioCtx.currentTime;
-        testOsc.start(now);
-        testOsc.stop(now + 0.2);
-        console.log('🔊 Test beep scheduled at', now);
-        
         // Resume audio context if suspended (browser autoplay policy)
         if (audioCtx.state === 'suspended') {
-            console.log('Resuming suspended audio context...');
-            audioCtx.resume().then(() => {
-                console.log('✅ Audio context resumed successfully');
-                console.log('New state:', audioCtx.state);
-            }).catch(err => {
-                console.error('Failed to resume audio context:', err);
-            });
+            audioCtx.resume();
         }
         
         // Wait a moment for context to be ready
         setTimeout(() => {
-            console.log('Audio context final state:', audioCtx.state);
             
             // Happy Birthday melody (complete version, louder)
             const notes = [
@@ -88,8 +61,6 @@ function playBirthdaySong() {
             
             let currentTime = audioCtx.currentTime + 0.2; // Longer delay to ensure audio context is ready
             
-            console.log('Playing', notes.length, 'notes starting at', currentTime);
-            
             notes.forEach((note, index) => {
                 const oscillator = audioCtx.createOscillator();
                 const gainNode = audioCtx.createGain();
@@ -107,17 +78,11 @@ function playBirthdaySong() {
                 oscillator.start(currentTime);
                 oscillator.stop(currentTime + note.duration);
                 
-                if (index === 0) {
-                    console.log('🎶 First note playing at', currentTime, 'Hz:', note.freq);
-                }
-                
                 currentTime += note.duration;
             });
             
-            console.log('🎵 Birthday song scheduled to play until', currentTime);
         }, 100);
     } catch (error) {
-        console.error('❌ Error playing birthday song:', error);
     }
 }
 
@@ -137,10 +102,7 @@ async function initMicrophone() {
         // Calibrate background noise before starting detection
         calibrateBackgroundNoise();
         
-        console.log('🎤 Microphone ready! Calibrating background noise...');
     } catch (error) {
-        console.error('Microphone access denied:', error);
-        // Fallback: allow spacebar to blow out candle
         enableSpacebarFallback();
     }
 }
@@ -162,8 +124,6 @@ function calibrateBackgroundNoise() {
             
             // Set adaptive threshold: baseline + 80 (if baseline is 20, threshold is 100; if baseline is 30, threshold is 110, etc.)
             dynamicThreshold = baselineNoise + 80;
-            
-            console.log(`📊 Background noise: ${baselineNoise.toFixed(2)}, Threshold set to: ${dynamicThreshold.toFixed(2)}`);
             
             // Start blow detection
             detectBlow();
@@ -202,9 +162,6 @@ function detectBlow() {
         }
         const average = sum / bufferLength;
         
-        // Log audio level for debugging
-        console.log('Audio level:', average, '| Threshold:', dynamicThreshold.toFixed(2));
-        
         // Use dynamic threshold based on background noise
         if (average > dynamicThreshold) {
             blowOutCandle();
@@ -220,7 +177,6 @@ function blowOutCandle() {
     if (isBlownOut) return;
     
     isBlownOut = true;
-    console.log('🎉 Candle blown out!');
     
     // Add class to trigger blow out animation
     $('.candle').addClass('blown-out');
@@ -249,8 +205,6 @@ function blowOutCandle() {
 
 // Fallback for browsers that don't support microphone or user denies access
 function enableSpacebarFallback() {
-    console.log('⌨️ Press SPACEBAR to blow out the candle');
-    
     $('.blow-instruction p').html('⌨️ Press SPACEBAR to blow out the candle!');
     
     $(document).on('keydown', function(e) {
