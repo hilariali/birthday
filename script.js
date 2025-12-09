@@ -57,7 +57,7 @@ function detectBlow() {
         console.log('Audio level:', average);
         
         // If volume is high enough (user is blowing), extinguish candle
-        if (average > 15) { // Lowered threshold for more sensitivity
+        if (average > 100) { // Lowered threshold for more sensitivity
             blowOutCandle();
         } else {
             requestAnimationFrame(checkAudioLevel);
