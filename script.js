@@ -7,23 +7,13 @@ let isBlownOut = false;
 $(document).ready(function() {
     console.log('Happy Birthday Ms Charlotte! 🎂');
     
-    // Add a click-to-start overlay due to browser autoplay restrictions
-    const startOverlay = $('<div class="start-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; cursor: pointer;"><h2 style="color: white; font-size: 2em; text-align: center;">🎂 Click to Start Birthday Celebration! 🎂</h2></div>');
-    $('body').append(startOverlay);
+    // Start everything immediately on page load
+    playBirthdaySong();
     
-    startOverlay.on('click', function() {
-        $(this).fadeOut(500, function() {
-            $(this).remove();
-        });
-        
-        // Play birthday song immediately after click
-        playBirthdaySong();
-        
-        // Show blow instruction and enable microphone after song
-        setTimeout(() => {
-            initMicrophone();
-        }, 2000); // Give time for song to play a bit
-    });
+    // Show blow instruction and enable microphone after song plays a bit
+    setTimeout(() => {
+        initMicrophone();
+    }, 2000);
 });
 
 function playBirthdaySong() {
