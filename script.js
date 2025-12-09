@@ -47,70 +47,86 @@ function playBirthdaySong() {
         // Create a simple celebratory melody using Web Audio API
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
+        console.log('Audio context state:', audioCtx.state);
+        
         // Resume audio context if suspended (browser autoplay policy)
         if (audioCtx.state === 'suspended') {
+            console.log('Resuming suspended audio context...');
             audioCtx.resume().then(() => {
-                console.log('Audio context resumed');
+                console.log('✅ Audio context resumed successfully');
+            }).catch(err => {
+                console.error('Failed to resume audio context:', err);
             });
         }
         
-        // Happy Birthday melody (complete version, louder)
-        const notes = [
-            {freq: 261.63, duration: 0.4}, // C - Happy
-            {freq: 261.63, duration: 0.4}, // C - birth-
-            {freq: 293.66, duration: 0.8}, // D - day
-            {freq: 261.63, duration: 0.8}, // C - to
-            {freq: 349.23, duration: 0.8}, // F - you
-            {freq: 329.63, duration: 1.6}, // E
+        // Wait a moment for context to be ready
+        setTimeout(() => {
+            console.log('Audio context final state:', audioCtx.state);
             
-            {freq: 261.63, duration: 0.4}, // C - Happy
-            {freq: 261.63, duration: 0.4}, // C - birth-
-            {freq: 293.66, duration: 0.8}, // D - day
-            {freq: 261.63, duration: 0.8}, // C - to
-            {freq: 392.00, duration: 0.8}, // G - you
-            {freq: 349.23, duration: 1.6}, // F
+            // Happy Birthday melody (complete version, louder)
+            const notes = [
+                {freq: 261.63, duration: 0.4}, // C - Happy
+                {freq: 261.63, duration: 0.4}, // C - birth-
+                {freq: 293.66, duration: 0.8}, // D - day
+                {freq: 261.63, duration: 0.8}, // C - to
+                {freq: 349.23, duration: 0.8}, // F - you
+                {freq: 329.63, duration: 1.6}, // E
+                
+                {freq: 261.63, duration: 0.4}, // C - Happy
+                {freq: 261.63, duration: 0.4}, // C - birth-
+                {freq: 293.66, duration: 0.8}, // D - day
+                {freq: 261.63, duration: 0.8}, // C - to
+                {freq: 392.00, duration: 0.8}, // G - you
+                {freq: 349.23, duration: 1.6}, // F
+                
+                {freq: 261.63, duration: 0.4}, // C - Happy
+                {freq: 261.63, duration: 0.4}, // C - birth-
+                {freq: 523.25, duration: 0.8}, // C5 - day
+                {freq: 440.00, duration: 0.8}, // A - dear
+                {freq: 349.23, duration: 0.8}, // F - [name]
+                {freq: 329.63, duration: 0.8}, // E
+                {freq: 293.66, duration: 1.6}, // D
+                
+                {freq: 466.16, duration: 0.4}, // Bb - Happy
+                {freq: 466.16, duration: 0.4}, // Bb - birth-
+                {freq: 440.00, duration: 0.8}, // A - day
+                {freq: 349.23, duration: 0.8}, // F - to
+                {freq: 392.00, duration: 0.8}, // G - you
+                {freq: 349.23, duration: 1.6}  // F
+            ];
             
-            {freq: 261.63, duration: 0.4}, // C - Happy
-            {freq: 261.63, duration: 0.4}, // C - birth-
-            {freq: 523.25, duration: 0.8}, // C5 - day
-            {freq: 440.00, duration: 0.8}, // A - dear
-            {freq: 349.23, duration: 0.8}, // F - [name]
-            {freq: 329.63, duration: 0.8}, // E
-            {freq: 293.66, duration: 1.6}, // D
+            let currentTime = audioCtx.currentTime + 0.2; // Longer delay to ensure audio context is ready
             
-            {freq: 466.16, duration: 0.4}, // Bb - Happy
-            {freq: 466.16, duration: 0.4}, // Bb - birth-
-            {freq: 440.00, duration: 0.8}, // A - day
-            {freq: 349.23, duration: 0.8}, // F - to
-            {freq: 392.00, duration: 0.8}, // G - you
-            {freq: 349.23, duration: 1.6}  // F
-        ];
-        
-        let currentTime = audioCtx.currentTime + 0.1; // Small delay to ensure audio context is ready
-        
-        notes.forEach(note => {
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
+            console.log('Playing', notes.length, 'notes starting at', currentTime);
             
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
+            notes.forEach((note, index) => {
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.frequency.value = note.freq;
+                oscillator.type = 'sine';
+                
+                // Increased volume to 0.8 for better audibility
+                gainNode.gain.setValueAtTime(0.8, currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + note.duration);
+                
+                oscillator.start(currentTime);
+                oscillator.stop(currentTime + note.duration);
+                
+                if (index === 0) {
+                    console.log('🎶 First note playing at', currentTime, 'Hz:', note.freq);
+                }
+                
+                currentTime += note.duration;
+            });
             
-            oscillator.frequency.value = note.freq;
-            oscillator.type = 'sine';
-            
-            // Increased volume to 0.8 for better audibility
-            gainNode.gain.setValueAtTime(0.8, currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + note.duration);
-            
-            oscillator.start(currentTime);
-            oscillator.stop(currentTime + note.duration);
-            
-            currentTime += note.duration;
-        });
-        
-        console.log('🎵 Birthday song scheduled to play');
+            console.log('🎵 Birthday song scheduled to play until', currentTime);
+        }, 100);
     } catch (error) {
-        console.error('Error playing birthday song:', error);
+        console.error('❌ Error playing birthday song:', error);
     }
 }
 
