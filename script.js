@@ -7,13 +7,13 @@ let isBlownOut = false;
 $(document).ready(function() {
     console.log('Happy Birthday Ms Charlotte! 🎂');
     
-    // Start everything immediately on page load
+    // Start birthday song immediately as page loads (during cake stacking)
     playBirthdaySong();
     
-    // Show blow instruction and enable microphone after song plays a bit
+    // Show blow instruction and enable microphone after cake finishes stacking
     setTimeout(() => {
         initMicrophone();
-    }, 2000);
+    }, 6500);
 });
 
 function playBirthdaySong() {
