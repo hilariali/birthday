@@ -117,15 +117,56 @@ async function initMicrophone() {
         analyser.fftSize = 256;
         microphone.connect(analyser);
         
-        // Start detecting blow
-        detectBlow();
+        // Calibrate background noise before starting detection
+        calibrateBackgroundNoise();
         
-        console.log('🎤 Microphone ready! Blow to extinguish the candle.');
+        console.log('🎤 Microphone ready! Calibrating background noise...');
     } catch (error) {
         console.error('Microphone access denied:', error);
         // Fallback: allow spacebar to blow out candle
         enableSpacebarFallback();
     }
+}
+
+let baselineNoise = 0;
+let dynamicThreshold = 120;
+
+function calibrateBackgroundNoise() {
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    const samples = [];
+    let sampleCount = 0;
+    const maxSamples = 30; // Collect 30 samples over ~1 second
+    
+    function collectSample() {
+        if (sampleCount >= maxSamples) {
+            // Calculate average baseline noise
+            baselineNoise = samples.reduce((a, b) => a + b, 0) / samples.length;
+            
+            // Set adaptive threshold: baseline + 70 (if baseline is 10, threshold is 80; if baseline is 30, threshold is 100, etc.)
+            dynamicThreshold = baselineNoise + 70;
+            
+            console.log(`📊 Background noise: ${baselineNoise.toFixed(2)}, Threshold set to: ${dynamicThreshold.toFixed(2)}`);
+            
+            // Start blow detection
+            detectBlow();
+            return;
+        }
+        
+        analyser.getByteFrequencyData(dataArray);
+        
+        let sum = 0;
+        for (let i = 0; i < bufferLength; i++) {
+            sum += dataArray[i];
+        }
+        const average = sum / bufferLength;
+        samples.push(average);
+        sampleCount++;
+        
+        setTimeout(collectSample, 30); // Sample every 30ms
+    }
+    
+    collectSample();
 }
 
 function detectBlow() {
@@ -145,10 +186,10 @@ function detectBlow() {
         const average = sum / bufferLength;
         
         // Log audio level for debugging
-        console.log('Audio level:', average);
+        console.log('Audio level:', average, '| Threshold:', dynamicThreshold.toFixed(2));
         
-        // If volume is high enough (user is blowing), extinguish candle
-        if (average > 120) { // Threshold set to 120
+        // Use dynamic threshold based on background noise
+        if (average > dynamicThreshold) {
             blowOutCandle();
         } else {
             requestAnimationFrame(checkAudioLevel);
