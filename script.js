@@ -7,11 +7,58 @@ let isBlownOut = false;
 $(document).ready(function() {
     console.log('Happy Birthday Ms Charlotte! 🎂');
     
-    // Wait for candle to appear before enabling blow detection
+    // Wait for cake animation to finish, then play birthday song
+    setTimeout(() => {
+        playBirthdaySong();
+    }, 6000); // Start after cake stacking animation completes
+    
+    // Show blow instruction and enable microphone after song starts
     setTimeout(() => {
         initMicrophone();
-    }, 6500); // Start after candle and flame appear
+    }, 8000); // Give time for song to play a bit
 });
+
+function playBirthdaySong() {
+    // Create a simple celebratory melody using Web Audio API
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Happy Birthday melody (simplified)
+    const notes = [
+        {freq: 261.63, duration: 0.5}, // C
+        {freq: 261.63, duration: 0.5}, // C
+        {freq: 293.66, duration: 1},   // D
+        {freq: 261.63, duration: 1},   // C
+        {freq: 349.23, duration: 1},   // F
+        {freq: 329.63, duration: 2},   // E
+        {freq: 261.63, duration: 0.5}, // C
+        {freq: 261.63, duration: 0.5}, // C
+        {freq: 293.66, duration: 1},   // D
+        {freq: 261.63, duration: 1},   // C
+        {freq: 392.00, duration: 1},   // G
+        {freq: 349.23, duration: 2}    // F
+    ];
+    
+    let currentTime = audioCtx.currentTime;
+    
+    notes.forEach(note => {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        oscillator.frequency.value = note.freq;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + note.duration);
+        
+        oscillator.start(currentTime);
+        oscillator.stop(currentTime + note.duration);
+        
+        currentTime += note.duration;
+    });
+}
 
 async function initMicrophone() {
     try {
