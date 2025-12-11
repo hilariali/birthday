@@ -50,7 +50,7 @@ body {
   background: #ffffff;
   border-radius: 10px;
   position: absolute;
-  top: 228px;
+  top: 215px;
   left: 50%;
   margin-left: -2.4px;
   margin-top: -8.33333333px;
@@ -212,8 +212,8 @@ body {
 }
 
 .celebration-message {
-  position: fixed;
-  top: 50%;
+  position: absolute;
+  top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: #ffd700;
