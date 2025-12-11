@@ -77,6 +77,9 @@ saveKeyButton.addEventListener('click', () => {
 
 // Check if API key exists in session storage on load
 window.addEventListener('load', () => {
+    // Clear any old session data to force fresh initialization
+    sessionStorage.removeItem('gemini_api_key');
+    
     // Auto-initialize with pre-configured key
     if (GEMINI_API_KEY) {
         if (initializeAPI(GEMINI_API_KEY)) {
