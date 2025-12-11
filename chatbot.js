@@ -12,7 +12,7 @@ let model = null;
 let chat = null;
 
 // Pre-configured API key (hidden from UI)
-const GEMINI_API_KEY = 'AIzaSyA_jDtA0MRxnOUGLatlKUUAAv2bfMJ-N5c';
+const GEMINI_API_KEY = 'AIzaSyArpx8Jo74Zw5OrvFz6dzaqEM2WIkEDI58';
 
 // System instruction for the chatbot
 const systemInstruction = `You are a friendly and cheerful AI assistant chatting with Charlotte on her birthday! 
@@ -32,7 +32,7 @@ function initializeAPI(apiKey) {
     try {
         genAI = new GoogleGenerativeAI(apiKey);
         model = genAI.getGenerativeModel({ 
-            model: "gemini-2.0-flash-lite",
+            model: "gemini-2.0-flash",
             systemInstruction: systemInstruction
         });
         
