@@ -6,7 +6,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #252432;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -52,7 +52,7 @@ body {
 }
 
 .chatbot-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ff69b4 0%, #ba55d3 100%);
     color: white;
     padding: 25px;
     text-align: center;
@@ -109,8 +109,8 @@ body {
 .bot-message .message-content {
     background: white;
     color: #333;
-    border: 2px solid #667eea;
-    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.1);
+    border: 2px solid #ff69b4;
+    box-shadow: 0 2px 10px rgba(255, 105, 180, 0.1);
 }
 
 .user-message {
@@ -118,9 +118,9 @@ body {
 }
 
 .user-message .message-content {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ff69b4 0%, #ba55d3 100%);
     color: white;
-    box-shadow: 0 2px 10px rgba(118, 75, 162, 0.2);
+    box-shadow: 0 2px 10px rgba(186, 85, 211, 0.2);
 }
 
 .chat-input-container {
@@ -151,13 +151,13 @@ body {
 }
 
 .api-key-input:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
 }
 
 .save-key-button {
     padding: 14px 24px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ff69b4 0%, #ba55d3 100%);
     color: white;
     border: none;
     border-radius: 25px;
@@ -165,13 +165,13 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
     white-space: nowrap;
 }
 
 .save-key-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
 }
 
 .chat-input {
@@ -190,13 +190,13 @@ body {
 }
 
 .chat-input:focus:not(:disabled) {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
 }
 
 .send-button {
     padding: 14px 28px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ff69b4 0%, #ba55d3 100%);
     color: white;
     border: none;
     border-radius: 25px;
@@ -204,7 +204,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
 }
 
 .send-button:disabled {
@@ -214,7 +214,7 @@ body {
 
 .send-button:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
 }
 
 .send-button:active {
@@ -240,12 +240,12 @@ body {
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-    background: #667eea;
+    background: #ff69b4;
     border-radius: 10px;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
-    background: #764ba2;
+    background: #ba55d3;
 }
 
 /* Responsive design */
