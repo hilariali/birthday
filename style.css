@@ -157,18 +157,24 @@ body {
   font-weight: 300;
   font-style: italic;
   text-align: center;
-  margin-top: 80px;
+  margin-top: 120px;
+  margin-bottom: 40px;
 }
 .text h1 {
-  font-size: 1.4em;
+  font-size: 1.6em;
+  margin-bottom: 10px;
+}
+
+.text p {
+  font-size: 1.2em;
 }
 
 .blow-instruction {
   color: #d1d1d1;
   font-family: "Lato", sans-serif;
   text-align: center;
-  margin-top: 160px;
-  font-size: 0.9em;
+  margin-top: 60px;
+  font-size: 1em;
   opacity: 0;
   -webkit-animation: fadeInInstruction 1s 7s ease-out forwards;
           animation: fadeInInstruction 1s 7s ease-out forwards;
