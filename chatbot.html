@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot</title>
     <link rel="stylesheet" href="./chatbot-style.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
 </head>
 <body>
     <nav class="navigation">
@@ -16,21 +23,32 @@
             <h1>🤖 Chat Assistant</h1>
             <p>Ask me anything!</p>
         </div>
-
-        <div class="chat-messages" id="chatMessages">
-            <div class="message bot-message">
-                <div class="message-content">
-                    <p>Hello! 👋 I'm your friendly chatbot. How can I help you today?</p>
-                </div>
-            </div>
         </div>
 
         <div class="chat-input-container">
+            <div class="api-key-container" id="apiKeyContainer">
+                <input 
+                    type="password" 
+                    id="apiKeyInput" 
+                    class="api-key-input" 
+                    placeholder="Enter your Gemini API key..."
+                    autocomplete="off"
+                >
+                <button id="saveKeyButton" class="save-key-button">Save Key</button>
+            </div>
             <input 
                 type="text" 
                 id="userInput" 
                 class="chat-input" 
                 placeholder="Type your message here..."
+                autocomplete="off"
+                disabled
+            >
+            <button id="sendButton" class="send-button" disabled>Send</button>
+        </div>
+    </div>
+
+    <script type="module" src="./chatbot.js"></script>essage here..."
                 autocomplete="off"
             >
             <button id="sendButton" class="send-button">Send</button>
