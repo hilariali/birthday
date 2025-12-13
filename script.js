@@ -2,6 +2,22 @@
 let player;
 let videoEnded = false;
 
+// Reset video state on page load
+window.addEventListener('load', function() {
+    videoEnded = false;
+    const videoContainer = document.getElementById('videoContainer');
+    const birthdayContent = document.getElementById('birthdayContent');
+    
+    if (videoContainer) {
+        videoContainer.style.display = 'block';
+        videoContainer.style.opacity = '1';
+    }
+    
+    if (birthdayContent) {
+        birthdayContent.style.display = 'none';
+    }
+});
+
 // YouTube Video ID - You can change this to any YouTube video ID
 const YOUTUBE_VIDEO_ID = '8ZX-5AljvyY';
 
