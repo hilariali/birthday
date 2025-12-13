@@ -197,7 +197,14 @@
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
     <script>
-        // Add cache busting timestamp to CSS and JS
+        // Clear cache and cookies on load
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                for (let name of names) caches.delete(name);
+            });
+        }
+        
+        // Add cache busting timestamp to CSS
         const timestamp = new Date().getTime();
         document.getElementById('cssLink').href = './style.css?v=' + timestamp;
     </script>
