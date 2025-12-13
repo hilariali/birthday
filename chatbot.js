@@ -1,5 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 const chatMessages = document.getElementById('chatMessages');
 const userInput = document.getElementById('userInput');
 const sendButton = document.getElementById('sendButton');
@@ -7,10 +5,8 @@ const apiKeyInput = document.getElementById('apiKeyInput');
 const saveKeyButton = document.getElementById('saveKeyButton');
 const apiKeyContainer = document.getElementById('apiKeyContainer');
 
-let genAI = null;
-let model = null;
-let chat = null;
-let GEMINI_API_KEY = null;
+let AKASHML_API_KEY = null;
+let conversationHistory = [];
 
 // System instruction for the chatbot
 async function loadAPIKey() {
@@ -45,20 +41,17 @@ Important context:
 
 Remember: Make this birthday conversation memorable and joyful!`;
 
-// Initialize the Gemini API with the provided key
+// Initialize the API with the provided key
 function initializeAPI(apiKey) {
     try {
-        genAI = new GoogleGenerativeAI(apiKey);
-        model = genAI.getGenerativeModel({ 
-            model: "gemini-2.0-flash-exp",
-            systemInstruction: systemInstruction
-        });
-        
-        // Start a new chat session
-        chat = model.startChat({
-            history: [],
-        });
-        
+        AKASHML_API_KEY = apiKey;
+        // Initialize conversation with system message
+        conversationHistory = [
+            {
+                role: "system",
+                content: systemInstruction
+            }
+        ];
         return true;
     } catch (error) {
         console.error('Error initializing API:', error);
@@ -85,7 +78,7 @@ saveKeyButton.addEventListener('click', () => {
         userInput.focus();
         
         // Store API key in session storage (not persistent across browser sessions)
-        sessionStorage.setItem('gemini_api_key', apiKey);
+        sessionStorage.setItem('akashml_api_key', apiKey);
         
         addMessage('✅ API key saved! Chat is now enabled. Ask me anything!', false);
     } else {
@@ -96,15 +89,15 @@ saveKeyButton.addEventListener('click', () => {
 // Check if API key exists in session storage on load
 window.addEventListener('load', async () => {
     // Clear any old session data to force fresh initialization
-    sessionStorage.removeItem('gemini_api_key');
+    sessionStorage.removeItem('akashml_api_key');
     
     // Load API key from secret.txt
-    GEMINI_API_KEY = await loadAPIKey();
+    AKASHML_API_KEY = await loadAPIKey();
     
     // Auto-initialize with loaded key
-    if (GEMINI_API_KEY && GEMINI_API_KEY.trim().length > 0) {
+    if (AKASHML_API_KEY && AKASHML_API_KEY.trim().length > 0) {
         console.log('API key loaded from secret.txt');
-        if (initializeAPI(GEMINI_API_KEY)) {
+        if (initializeAPI(AKASHML_API_KEY)) {
             apiKeyContainer.style.display = 'none';
             userInput.disabled = false;
             sendButton.disabled = false;
@@ -119,7 +112,7 @@ window.addEventListener('load', async () => {
         console.log('Could not load API key from file, showing input field');
         // Show API key input container if file loading fails
         apiKeyContainer.style.display = 'block';
-        const savedKey = sessionStorage.getItem('gemini_api_key');
+        const savedKey = sessionStorage.getItem('akashml_api_key');
         if (savedKey) {
             if (initializeAPI(savedKey)) {
                 apiKeyContainer.style.display = 'none';
@@ -150,13 +143,19 @@ function addMessage(text, isUser = false) {
 }
 
 // Handle send message
-function sendMessage() {
+async function sendMessage() {
     const message = userInput.value.trim();
     
-    if (message === '' || !chat) return;
+    if (message === '' || !AKASHML_API_KEY) return;
     
     // Add user message
     addMessage(message, true);
+    
+    // Add to conversation history
+    conversationHistory.push({
+        role: "user",
+        content: message
+    });
     
     // Clear input
     userInput.value = '';
@@ -173,44 +172,67 @@ function sendMessage() {
     chatMessages.appendChild(typingDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
     
-    // Get response from Gemini
-    chat.sendMessage(message)
-        .then(result => {
-            // Remove typing indicator
-            const typing = document.getElementById('typing-indicator');
-            if (typing) typing.remove();
-            
-            const response = result.response;
-            const text = response.text();
-            addMessage(text, false);
-            
-            // Re-enable input
-            userInput.disabled = false;
-            sendButton.disabled = false;
-            userInput.focus();
-        })
-        .catch(error => {
-            // Remove typing indicator
-            const typing = document.getElementById('typing-indicator');
-            if (typing) typing.remove();
-            
-            console.error('Error sending message:', error);
-            console.error('Error details:', JSON.stringify(error, null, 2));
-            
-            let errorMessage = 'Sorry, I encountered an error. ';
-            if (error.message) {
-                errorMessage += error.message;
-            }
-            if (error.status === 400) {
-                errorMessage = 'Bad request error (400). This might be due to the model not being available in your region or invalid request format. Try using gemini-1.5-flash model instead.';
-            }
-            
-            addMessage(errorMessage, false);
-            
-            // Re-enable input
-            userInput.disabled = false;
-            sendButton.disabled = false;
+    try {
+        // Call AkashML API
+        const url = "https://api.akashml.com/v1/chat/completions";
+        
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${AKASHML_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: "meta-llama/Llama-3.3-70B-Instruct",
+                messages: conversationHistory,
+                temperature: 0.7,
+                max_tokens: 2048,
+                top_p: 0.9
+            })
         });
+        
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const assistantMessage = data.choices[0].message.content;
+        
+        // Remove typing indicator
+        const typing = document.getElementById('typing-indicator');
+        if (typing) typing.remove();
+        
+        // Add assistant response to history
+        conversationHistory.push({
+            role: "assistant",
+            content: assistantMessage
+        });
+        
+        addMessage(assistantMessage, false);
+        
+        // Re-enable input
+        userInput.disabled = false;
+        sendButton.disabled = false;
+        userInput.focus();
+        
+    } catch (error) {
+        // Remove typing indicator
+        const typing = document.getElementById('typing-indicator');
+        if (typing) typing.remove();
+        
+        console.error('Error sending message:', error);
+        
+        let errorMessage = 'Sorry, I encountered an error. ';
+        if (error.message) {
+            errorMessage += error.message;
+        }
+        
+        addMessage(errorMessage, false);
+        
+        // Re-enable input
+        userInput.disabled = false;
+        sendButton.disabled = false;
+    }
 }
 
 // Event listeners
