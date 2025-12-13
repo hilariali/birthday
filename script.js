@@ -1,10 +1,76 @@
+// YouTube Player
+let player;
+let videoEnded = false;
+
+// YouTube Video ID - You can change this to any YouTube video ID
+const YOUTUBE_VIDEO_ID = 'dQw4w9WgXcQ'; // Replace with your desired video ID
+
+// This function creates an <iframe> (and YouTube player) after the API code downloads.
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: {
+            autoplay: 1,
+            controls: 1,
+            modestbranding: 1,
+            rel: 0
+        },
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
+function onPlayerReady(event) {
+    event.target.playVideo();
+}
+
+function onPlayerStateChange(event) {
+    // When video ends (state 0)
+    if (event.data === YT.PlayerState.ENDED) {
+        startBirthdayExperience();
+    }
+}
+
+// Skip button functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const skipButton = document.getElementById('skipButton');
+    if (skipButton) {
+        skipButton.addEventListener('click', startBirthdayExperience);
+    }
+});
+
+function startBirthdayExperience() {
+    if (videoEnded) return; // Prevent multiple calls
+    videoEnded = true;
+    
+    // Hide video container
+    const videoContainer = document.getElementById('videoContainer');
+    videoContainer.style.transition = 'opacity 1s';
+    videoContainer.style.opacity = '0';
+    
+    setTimeout(() => {
+        videoContainer.style.display = 'none';
+        
+        // Show birthday content
+        const birthdayContent = document.getElementById('birthdayContent');
+        birthdayContent.style.display = 'block';
+        
+        // Initialize birthday experience
+        initBirthdayPage();
+    }, 1000);
+}
+
 // Blow out candle feature using microphone
 let audioContext;
 let analyser;
 let microphone;
 let isBlownOut = false;
 
-$(document).ready(function() {
+function initBirthdayPage() {
     console.log('Happy Birthday Ms Charlotte! 🎂');
     
     let hasStarted = false;
@@ -26,6 +92,11 @@ $(document).ready(function() {
     setTimeout(() => {
         initMicrophone();
     }, 6500);
+}
+
+$(document).ready(function() {
+    // YouTube player will handle initialization
+    // Birthday page content is hidden until video ends or is skipped
 });
 
 function playBirthdaySong() {
