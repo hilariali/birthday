@@ -59,17 +59,21 @@ function startBirthdayExperience() {
         const birthdayContent = document.getElementById('birthdayContent');
         birthdayContent.style.display = 'block';
         
-        // Start the cake and candle animations together after video ends
+        // Start the cake animation after video ends
         setTimeout(() => {
             const cakeAnimation = document.getElementById('bizcocho_1');
-            const candle = document.querySelector('.candle');
             
             if (cakeAnimation) {
                 cakeAnimation.beginElement();
-            }
-            
-            if (candle) {
-                candle.classList.add('animate');
+                
+                // Trigger candle animation after cake is fully built
+                // Total cake animation time: bizcocho_1(0.8s) + relleno_1(0.5s) + bizcocho_2(0.5s) + relleno_2(0.5s) + bizcocho_3(0.3s) + crema(2s) = 4.6s
+                setTimeout(() => {
+                    const candle = document.querySelector('.candle');
+                    if (candle) {
+                        candle.classList.add('animate');
+                    }
+                }, 4600);
             }
         }, 500);
         
