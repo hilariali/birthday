@@ -10,9 +10,23 @@ const apiKeyContainer = document.getElementById('apiKeyContainer');
 let genAI = null;
 let model = null;
 let chat = null;
+let GEMINI_API_KEY = null;
 
-// Pre-configured API key (hidden from UI)
-const GEMINI_API_KEY = 'AIzaSyArpx8Jo74Zw5OrvFz6dzaqEM2WIkEDI58';
+// System instruction for the chatbot
+async function loadAPIKey() {
+    try {
+        const response = await fetch('secret.txt');
+        const text = await response.text();
+        const match = text.match(/key\s*=\s*"([^"]+)"/);
+        if (match) {
+            return match[1];
+        }
+        return null;
+    } catch (error) {
+        console.error('Error loading API key:', error);
+        return null;
+    }
+}
 
 // System instruction for the chatbot
 const systemInstruction = `You are a friendly and cheerful AI assistant chatting with Charlotte on her birthday! 
@@ -76,11 +90,14 @@ saveKeyButton.addEventListener('click', () => {
 });
 
 // Check if API key exists in session storage on load
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
     // Clear any old session data to force fresh initialization
     sessionStorage.removeItem('gemini_api_key');
     
-    // Auto-initialize with pre-configured key
+    // Load API key from secret.txt
+    GEMINI_API_KEY = await loadAPIKey();
+    
+    // Auto-initialize with loaded key
     if (GEMINI_API_KEY) {
         if (initializeAPI(GEMINI_API_KEY)) {
             apiKeyContainer.style.display = 'none';
