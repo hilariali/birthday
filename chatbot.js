@@ -16,6 +16,9 @@ let GEMINI_API_KEY = null;
 async function loadAPIKey() {
     try {
         const response = await fetch('secret.txt');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch secret.txt: ${response.status}`);
+        }
         const text = await response.text();
         const match = text.match(/key\s*=\s*"([^"]+)"/);
         if (match) {
@@ -23,7 +26,7 @@ async function loadAPIKey() {
         }
         return null;
     } catch (error) {
-        console.error('Error loading API key:', error);
+        console.error('Error loading API key from file:', error);
         return null;
     }
 }
@@ -47,7 +50,7 @@ function initializeAPI(apiKey) {
     try {
         genAI = new GoogleGenerativeAI(apiKey);
         model = genAI.getGenerativeModel({ 
-            model: "gemini-2.0-flash",
+            model: "gemini-1.5-flash",
             systemInstruction: systemInstruction
         });
         
@@ -99,14 +102,23 @@ window.addEventListener('load', async () => {
     GEMINI_API_KEY = await loadAPIKey();
     
     // Auto-initialize with loaded key
-    if (GEMINI_API_KEY) {
+    if (GEMINI_API_KEY && GEMINI_API_KEY.trim().length > 0) {
+        console.log('API key loaded from secret.txt');
         if (initializeAPI(GEMINI_API_KEY)) {
             apiKeyContainer.style.display = 'none';
             userInput.disabled = false;
             sendButton.disabled = false;
             userInput.focus();
+        } else {
+            console.error('Failed to initialize API with loaded key');
+            // Show API key input if initialization fails
+            apiKeyContainer.style.display = 'block';
+            addMessage('⚠️ Auto-initialization failed. Please enter your API key manually.', false);
         }
     } else {
+        console.log('Could not load API key from file, showing input field');
+        // Show API key input container if file loading fails
+        apiKeyContainer.style.display = 'block';
         const savedKey = sessionStorage.getItem('gemini_api_key');
         if (savedKey) {
             if (initializeAPI(savedKey)) {
@@ -182,8 +194,18 @@ function sendMessage() {
             const typing = document.getElementById('typing-indicator');
             if (typing) typing.remove();
             
-            console.error('Error:', error);
-            addMessage('Sorry, I encountered an error. Please try again.', false);
+            console.error('Error sending message:', error);
+            console.error('Error details:', JSON.stringify(error, null, 2));
+            
+            let errorMessage = 'Sorry, I encountered an error. ';
+            if (error.message) {
+                errorMessage += error.message;
+            }
+            if (error.status === 400) {
+                errorMessage = 'Bad request error (400). This might be due to the model not being available in your region or invalid request format. Try using gemini-1.5-flash model instead.';
+            }
+            
+            addMessage(errorMessage, false);
             
             // Re-enable input
             userInput.disabled = false;
