@@ -59,6 +59,20 @@ function startBirthdayExperience() {
         const birthdayContent = document.getElementById('birthdayContent');
         birthdayContent.style.display = 'block';
         
+        // Start the cake and candle animations together after video ends
+        setTimeout(() => {
+            const cakeAnimation = document.getElementById('bizcocho_1');
+            const candle = document.querySelector('.candle');
+            
+            if (cakeAnimation) {
+                cakeAnimation.beginElement();
+            }
+            
+            if (candle) {
+                candle.classList.add('animate');
+            }
+        }, 500);
+        
         // Initialize birthday experience
         initBirthdayPage();
     }, 1000);

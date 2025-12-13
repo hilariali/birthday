@@ -108,8 +108,11 @@ body {
   transform: translateY(-300px);
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
-  -webkit-animation: in 500ms 6s ease-out forwards;
-          animation: in 500ms 6s ease-out forwards;
+}
+
+.candle.animate {
+  -webkit-animation: in 500ms ease-out forwards;
+          animation: in 500ms ease-out forwards;
 }
 
 .candle:after,
