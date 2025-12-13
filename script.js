@@ -15,7 +15,8 @@ function onYouTubeIframeAPIReady() {
             autoplay: 1,
             controls: 1,
             modestbranding: 1,
-            rel: 0
+            rel: 0,
+            mute: 0
         },
         events: {
             'onReady': onPlayerReady,
@@ -25,6 +26,7 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady(event) {
+    // Try to play with sound first
     event.target.playVideo();
 }
 
