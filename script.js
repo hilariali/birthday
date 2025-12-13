@@ -16,6 +16,11 @@ window.addEventListener('load', function() {
     if (birthdayContent) {
         birthdayContent.style.display = 'none';
     }
+    
+    // Check if YouTube API is already loaded
+    if (window.YT && window.YT.Player) {
+        onYouTubeIframeAPIReady();
+    }
 });
 
 // YouTube Video ID - You can change this to any YouTube video ID
