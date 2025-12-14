@@ -1,118 +1,34 @@
-// YouTube Player
-let player;
-let videoEnded = false;
-
-// Reset video state on page load
-window.addEventListener('load', function() {
-    videoEnded = false;
-    const videoContainer = document.getElementById('videoContainer');
-    const birthdayContent = document.getElementById('birthdayContent');
-    
-    if (videoContainer) {
-        videoContainer.style.display = 'block';
-        videoContainer.style.opacity = '1';
-    }
-    
-    if (birthdayContent) {
-        birthdayContent.style.display = 'none';
-    }
-    
-    // Check if YouTube API is already loaded
-    if (window.YT && window.YT.Player) {
-        onYouTubeIframeAPIReady();
-    }
-});
-
-// YouTube Video ID - You can change this to any YouTube video ID
-const YOUTUBE_VIDEO_ID = '8ZX-5AljvyY';
-
-// This function creates an <iframe> (and YouTube player) after the API code downloads.
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-        height: '100%',
-        width: '100%',
-        videoId: YOUTUBE_VIDEO_ID,
-        playerVars: {
-            autoplay: 1,
-            controls: 1,
-            modestbranding: 1,
-            rel: 0,
-            mute: 0
-        },
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-        }
-    });
-}
-
-function onPlayerReady(event) {
-    // Try to play with sound first
-    event.target.playVideo();
-}
-
-function onPlayerStateChange(event) {
-    // When video ends (state 0)
-    if (event.data === YT.PlayerState.ENDED) {
-        startBirthdayExperience();
-    }
-}
-
-// Skip button functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const skipButton = document.getElementById('skipButton');
-    if (skipButton) {
-        skipButton.addEventListener('click', startBirthdayExperience);
-    }
-});
-
-function startBirthdayExperience() {
-    if (videoEnded) return; // Prevent multiple calls
-    videoEnded = true;
-    
-    // Hide video container
-    const videoContainer = document.getElementById('videoContainer');
-    videoContainer.style.transition = 'opacity 1s';
-    videoContainer.style.opacity = '0';
-    
-    setTimeout(() => {
-        videoContainer.style.display = 'none';
-        
-        // Show birthday content
-        const birthdayContent = document.getElementById('birthdayContent');
-        birthdayContent.style.display = 'block';
-        
-        // Start the cake animation after video ends
-        setTimeout(() => {
-            const cakeAnimation = document.getElementById('bizcocho_1');
-            
-            if (cakeAnimation) {
-                cakeAnimation.beginElement();
-                
-                // Trigger candle animation after cake is fully built
-                // Total cake animation time: bizcocho_1(0.8s) + relleno_1(0.5s) + bizcocho_2(0.5s) + relleno_2(0.5s) + bizcocho_3(0.3s) + crema(2s) = 4.6s
-                setTimeout(() => {
-                    const candle = document.querySelector('.candle');
-                    if (candle) {
-                        candle.classList.add('animate');
-                    }
-                }, 4600);
-            }
-        }, 500);
-        
-        // Initialize birthday experience
-        initBirthdayPage();
-    }, 1000);
-}
-
-// Blow out candle feature using microphone
+// Birthday cake animation and candle blow feature
 let audioContext;
 let analyser;
 let microphone;
 let isBlownOut = false;
 
+$(document).ready(function() {
+    // Start cake animation immediately on page load
+    setTimeout(() => {
+        const cakeAnimation = document.getElementById('bizcocho_1');
+        
+        if (cakeAnimation) {
+            cakeAnimation.beginElement();
+            
+            // Trigger candle animation after cake is fully built
+            // Total cake animation time: bizcocho_1(0.8s) + relleno_1(0.5s) + bizcocho_2(0.5s) + relleno_2(0.5s) + bizcocho_3(0.3s) + crema(2s) = 4.6s
+            setTimeout(() => {
+                const candle = document.querySelector('.candle');
+                if (candle) {
+                    candle.classList.add('animate');
+                }
+            }, 4600);
+        }
+    }, 500);
+    
+    // Initialize birthday experience
+    initBirthdayPage();
+});
+
 function initBirthdayPage() {
-    console.log('Happy Birthday Ms Charlotte! 🎂');
+    console.log('Happy Birthday! 🎂');
     
     let hasStarted = false;
     
@@ -134,11 +50,6 @@ function initBirthdayPage() {
         initMicrophone();
     }, 6500);
 }
-
-$(document).ready(function() {
-    // YouTube player will handle initialization
-    // Birthday page content is hidden until video ends or is skipped
-});
 
 function playBirthdaySong() {
     try {
@@ -344,7 +255,7 @@ function blowOutCandle() {
     
     // Show celebration message
     setTimeout(() => {
-        const message = $('<div class="celebration-message">✨ Make a Wish! ✨<br><span style="font-size: 0.6em;">Happy Birthday Ms Charlotte!</span></div>');
+        const message = $('<div class="celebration-message">✨ Make a Wish! ✨</div>');
         $('body').append(message);
         
         // Remove message after 4 seconds
